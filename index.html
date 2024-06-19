@@ -182,7 +182,7 @@
         <div class="col-6">
           <h2>Product Enquiry</h2>
 
-          <form>
+          <form id="enquiry">
             <div class="row">
               <div class="col mb-3">
                 <label for="first_name" class="form-label text-dark">First Name</label>
@@ -232,7 +232,7 @@
 
             
 
-            <select class="form-select mb-3" aria-label="Default select mobile">
+            <select id="product" class="form-select mb-3" aria-label="Default select mobile">
               <option selected>Select Mobile</option>
               <option value="Mobile 1">Mobile 1</option>
               <option value="Mobile 2">Mobile 2</option>
@@ -286,5 +286,42 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      const form = document.getElementById('enquiry');
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const firstName = form.elements.first_name.value;
+        const lastName = form.elements.last_name.value;
+        const email = form.elements.email_address.value;
+        const mobile = form.elements.mobile.value;
+        const product = form.elements.product.value;
+        const enquiryMessage = form.elements.enquiry_message.value;
+
+        if(firstName == "") {
+          alert("First name is required")
+        }
+
+        if(!(/^[6-9]\d{9}$/.test(mobile))) {
+          alert('Please provide valid mobile number')
+        }
+
+        const formData = {
+          firstName, lastName, email, product, enquiryMessage
+        }
+
+        console.log(firstName, lastName, email, product, enquiryMessage)
+
+        fetch('https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjUwNTY1MDYzNTA0MzQ1MjY4NTUzMDUxM2Ii_pc', {
+          method: 'POST',
+          body: JSON.stringify(formData)
+        }).then(res => res.json()).then(res => {
+          alert("We have recieved your enquiry. We will get in touch with you soon. Thank you.")
+        }).finally(function(){
+          form.reset(); // Clear input
+        })
+      })
+    </script>
   </body>
 </html>
